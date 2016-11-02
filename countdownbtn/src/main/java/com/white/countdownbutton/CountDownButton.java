@@ -54,6 +54,10 @@ public class CountDownButton extends Button {
      * 倒计时是否可用
      */
     private boolean canCountDown = false;
+    /**
+     * 点击事件监听器
+     */
+    private OnClickListener onClickListener;
 
     private Subscription click;
 
@@ -95,6 +99,7 @@ public class CountDownButton extends Button {
             click.unsubscribe();
             setText(mDefaultText);
             setEnabled(true);
+            setClickable(true);
         }
     }
 
@@ -118,7 +123,6 @@ public class CountDownButton extends Button {
         super(context, attrs, defStyleAttr);
     }
 
-    private OnClickListener onClickListener;
 
     @Override
     public void setOnClickListener(OnClickListener onClickListener) {
@@ -139,6 +143,7 @@ public class CountDownButton extends Button {
                     mDefaultText = getText().toString();
                     setText(String.format(Locale.CHINA, mCountDownFormat, mCount));
                     setEnabled(false);
+                    setClickable(false);
                     click = Observable.interval(0, mInterval, TimeUnit.MILLISECONDS)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Action1<Long>() {
@@ -147,6 +152,7 @@ public class CountDownButton extends Button {
                                     long nowCount = mCount - aLong;
                                     if (nowCount == 0) {
                                         setEnabled(true);
+                                        setClickable(true);
                                         setText(mDefaultText);
                                         click.unsubscribe();
                                     } else if (mCount - aLong > 0) {
