@@ -13,13 +13,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.white.countdown.MainActivity">
 
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="10086"
+        />
+
     <com.white.countdownbutton.CountDownButton
         android:id="@+id/cd_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="get verifyCode"
         app:countDown="60"
-        app:countDownFormat="请稍候(%ds)"
+        app:countDownFormat="Please wait (%ds)"
         app:countDownInterval="1000"
         />
 
