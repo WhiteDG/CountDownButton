@@ -24,7 +24,7 @@ public class CountDownButton extends Button {
     /**
      * 默认时长60s
      */
-    private static final int DEFAULT_COUNT = 60;
+    private static final long DEFAULT_COUNT = 60 * 1000;
     /**
      * 默认倒计时文字格式(显示秒数)
      */
@@ -36,7 +36,7 @@ public class CountDownButton extends Button {
     /**
      * 倒计时时长，单位为秒
      */
-    private int mCount;
+    private long mCount;
     /**
      * 时间间隔
      */
@@ -48,7 +48,7 @@ public class CountDownButton extends Button {
     /**
      * 倒计时是否可用
      */
-    private boolean mEnableCountDown = false;
+    private boolean mEnableCountDown = true;
     /**
      * 点击事件监听器
      */
@@ -60,14 +60,14 @@ public class CountDownButton extends Button {
     private CountDownTimer mCountDownTimer;
 
     public void setEnableCountDown(boolean enableCountDown) {
-        this.mEnableCountDown = enableCountDown;
+        this.mEnableCountDown = (mCount > mInterval) && enableCountDown;
     }
 
     public void setCountDownFormat(String countDownFormat) {
         this.mCountDownFormat = countDownFormat;
     }
 
-    public void setCount(int count) {
+    public void setCount(long count) {
         this.mCount = count;
     }
 
@@ -82,7 +82,7 @@ public class CountDownButton extends Button {
      * @param interval        间隔
      * @param countDownFormat 文字格式
      */
-    public void setCountDown(int count, long interval, String countDownFormat) {
+    public void setCountDown(long count, long interval, String countDownFormat) {
         this.mCount = count;
         this.mCountDownFormat = countDownFormat;
         this.mInterval = interval;
@@ -120,10 +120,10 @@ public class CountDownButton extends Button {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CountDownButton);
         mCountDownFormat = typedArray.getString(R.styleable.CountDownButton_countDownFormat);
         if (typedArray.hasValue(R.styleable.CountDownButton_countDown)) {
-            this.mEnableCountDown = true;
             mCount = (int) typedArray.getFloat(R.styleable.CountDownButton_countDown, DEFAULT_COUNT);
         }
         mInterval = (int) typedArray.getFloat(R.styleable.CountDownButton_countDownInterval, DEFAULT_INTERVAL);
+        mEnableCountDown = (mCount > mInterval) && typedArray.getBoolean(R.styleable.CountDownButton_enableCountDown, true);
         typedArray.recycle();
     }
 
@@ -149,7 +149,7 @@ public class CountDownButton extends Button {
                     setEnabled(false);
                     setClickable(false);
                     if (mCountDownTimer == null) {
-                        mCountDownTimer = new CountDownTimer(mCount * 1000, mInterval) {
+                        mCountDownTimer = new CountDownTimer(mCount, mInterval) {
                             @Override
                             public void onTick(long millisUntilFinished) {
                                 setText(String.format(Locale.CHINA, mCountDownFormat, millisUntilFinished / 1000));

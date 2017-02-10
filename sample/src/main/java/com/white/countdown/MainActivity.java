@@ -69,10 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 String phoneNum = mEtPhone.getText().toString();
                 if (TextUtils.isEmpty(phoneNum)) {
                     Toast.makeText(MainActivity.this, "Please input the phone num", Toast.LENGTH_SHORT).show();
-                    mCountDownButton.setEnableCountDown(false);
                     return;
                 }
-                mCountDownButton.setEnableCountDown(true);
                 getSmsCode(phoneNum);
             }
         });
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // send request to get sms code
+                // 模拟发送请求获取验证码
                 try {
                     Thread.sleep(5000);
                     if (phoneNum.equals("10086")) {

@@ -25,9 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="get verifyCode"
-        app:countDown="60"
+        app:countDown="10000"
         app:countDownFormat="Please wait (%ds)"
-        app:countDownInterval="1000"
+        app:countDownInterval="2000"
         />
 
     <Button
