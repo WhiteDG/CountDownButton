@@ -3,17 +3,12 @@ package com.white.countdownbutton;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Button;
 
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Author: Wh1te
@@ -39,7 +34,7 @@ public class CountDownButton extends Button {
      */
     private String mDefaultText;
     /**
-     * 倒计时时长
+     * 倒计时时长，单位为秒
      */
     private int mCount;
     /**
@@ -53,16 +48,19 @@ public class CountDownButton extends Button {
     /**
      * 倒计时是否可用
      */
-    private boolean canCountDown = false;
+    private boolean mEnableCountDown = false;
     /**
      * 点击事件监听器
      */
     private OnClickListener onClickListener;
 
-    private Subscription click;
+    /**
+     * 倒计时
+     */
+    private CountDownTimer mCountDownTimer;
 
-    public void setCanCountDown(boolean canCountDown) {
-        this.canCountDown = canCountDown;
+    public void setEnableCountDown(boolean enableCountDown) {
+        this.mEnableCountDown = enableCountDown;
     }
 
     public void setCountDownFormat(String countDownFormat) {
@@ -88,15 +86,15 @@ public class CountDownButton extends Button {
         this.mCount = count;
         this.mCountDownFormat = countDownFormat;
         this.mInterval = interval;
-        setCanCountDown(true);
+        setEnableCountDown(true);
     }
 
     /**
      * 移除倒计时
      */
     public void removeCountDown() {
-        if (click != null) {
-            click.unsubscribe();
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
             setText(mDefaultText);
             setEnabled(true);
             setClickable(true);
@@ -109,18 +107,24 @@ public class CountDownButton extends Button {
 
     public CountDownButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CountDownButton);
-        mCountDownFormat = typedArray.getString(R.styleable.CountDownButton_countDownFormat);
-        if (typedArray.hasValue(R.styleable.CountDownButton_countDown)) {
-            this.canCountDown = true;
-            mCount = (int) typedArray.getFloat(R.styleable.CountDownButton_countDown, DEFAULT_COUNT);
-        }
-        mInterval = (int) typedArray.getFloat(R.styleable.CountDownButton_countDownInterval, DEFAULT_INTERVAL);
-        typedArray.recycle();
+        init(context, attrs);
     }
 
     public CountDownButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
+
+
+    private void init(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CountDownButton);
+        mCountDownFormat = typedArray.getString(R.styleable.CountDownButton_countDownFormat);
+        if (typedArray.hasValue(R.styleable.CountDownButton_countDown)) {
+            this.mEnableCountDown = true;
+            mCount = (int) typedArray.getFloat(R.styleable.CountDownButton_countDown, DEFAULT_COUNT);
+        }
+        mInterval = (int) typedArray.getFloat(R.styleable.CountDownButton_countDownInterval, DEFAULT_INTERVAL);
+        typedArray.recycle();
     }
 
 
@@ -139,27 +143,27 @@ public class CountDownButton extends Button {
                 if (onClickListener != null && rect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     onClickListener.onClick(this);
                 }
-                if (canCountDown && rect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                if (mEnableCountDown && rect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     mDefaultText = getText().toString();
                     setText(String.format(Locale.CHINA, mCountDownFormat, mCount));
                     setEnabled(false);
                     setClickable(false);
-                    click = Observable.interval(0, mInterval, TimeUnit.MILLISECONDS)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Action1<Long>() {
-                                @Override
-                                public void call(Long aLong) {
-                                    long nowCount = mCount - aLong;
-                                    if (nowCount == 0) {
-                                        setEnabled(true);
-                                        setClickable(true);
-                                        setText(mDefaultText);
-                                        click.unsubscribe();
-                                    } else if (mCount - aLong > 0) {
-                                        setText(String.format(Locale.CHINA, mCountDownFormat, nowCount));
-                                    }
-                                }
-                            });
+                    if (mCountDownTimer == null) {
+                        mCountDownTimer = new CountDownTimer(mCount * 1000, mInterval) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                setText(String.format(Locale.CHINA, mCountDownFormat, millisUntilFinished / 1000));
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                setEnabled(true);
+                                setClickable(true);
+                                setText(mDefaultText);
+                            }
+                        };
+                    }
+                    mCountDownTimer.start();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:

@@ -48,15 +48,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private EditText mEtPhone;
+    private Button mBtnStop;
+    private CountDownButton mCountDownButton;
     private MyHandler mMyHandler;
-
-    private <T extends View> T $(int resId) {
-        return (T) findViewById(resId);
-    }
-
-    EditText mEtPhone;
-    Button mBtnStop;
-    CountDownButton mCountDownButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
         mCountDownButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 String phoneNum = mEtPhone.getText().toString();
                 if (TextUtils.isEmpty(phoneNum)) {
                     Toast.makeText(MainActivity.this, "Please input the phone num", Toast.LENGTH_SHORT).show();
-                    mCountDownButton.setCanCountDown(false);
+                    mCountDownButton.setEnableCountDown(false);
                     return;
                 }
-                mCountDownButton.setCanCountDown(true);
+                mCountDownButton.setEnableCountDown(true);
                 getSmsCode(phoneNum);
             }
         });
@@ -87,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 mCountDownButton.removeCountDown();
             }
         });
-
     }
 
     private void getSmsCode(final String phoneNum) {
@@ -109,4 +103,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
+
+    private <T extends View> T $(int resId) {
+        return (T) findViewById(resId);
+    }
+
 }
