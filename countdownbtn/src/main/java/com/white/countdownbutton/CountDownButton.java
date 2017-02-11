@@ -59,48 +59,6 @@ public class CountDownButton extends Button {
      */
     private CountDownTimer mCountDownTimer;
 
-    public void setEnableCountDown(boolean enableCountDown) {
-        this.mEnableCountDown = (mCount > mInterval) && enableCountDown;
-    }
-
-    public void setCountDownFormat(String countDownFormat) {
-        this.mCountDownFormat = countDownFormat;
-    }
-
-    public void setCount(long count) {
-        this.mCount = count;
-    }
-
-    public void setInterval(long interval) {
-        mInterval = interval;
-    }
-
-    /**
-     * 设置倒计时数据
-     *
-     * @param count           时长
-     * @param interval        间隔
-     * @param countDownFormat 文字格式
-     */
-    public void setCountDown(long count, long interval, String countDownFormat) {
-        this.mCount = count;
-        this.mCountDownFormat = countDownFormat;
-        this.mInterval = interval;
-        setEnableCountDown(true);
-    }
-
-    /**
-     * 移除倒计时
-     */
-    public void removeCountDown() {
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
-            setText(mDefaultText);
-            setEnabled(true);
-            setClickable(true);
-        }
-    }
-
     public CountDownButton(Context context) {
         super(context);
     }
@@ -170,5 +128,47 @@ public class CountDownButton extends Button {
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    public void setEnableCountDown(boolean enableCountDown) {
+        this.mEnableCountDown = (mCount > mInterval) && enableCountDown;
+    }
+
+    public void setCountDownFormat(String countDownFormat) {
+        this.mCountDownFormat = countDownFormat;
+    }
+
+    public void setCount(long count) {
+        this.mCount = count;
+    }
+
+    public void setInterval(long interval) {
+        mInterval = interval;
+    }
+
+    /**
+     * 设置倒计时数据
+     *
+     * @param count           时长
+     * @param interval        间隔
+     * @param countDownFormat 文字格式
+     */
+    public void setCountDown(long count, long interval, String countDownFormat) {
+        this.mCount = count;
+        this.mCountDownFormat = countDownFormat;
+        this.mInterval = interval;
+        setEnableCountDown(true);
+    }
+
+    /**
+     * 移除倒计时
+     */
+    public void removeCountDown() {
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+            setText(mDefaultText);
+            setEnabled(true);
+            setClickable(true);
+        }
     }
 }

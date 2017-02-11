@@ -13,28 +13,36 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.white.countdown.MainActivity">
 
-    <EditText
-        android:id="@+id/et_phone"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="10086"
-        />
+        android:orientation="horizontal"
+        >
 
-    <com.white.countdownbutton.CountDownButton
-        android:id="@+id/cd_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="get verifyCode"
-        app:countDown="10000"
-        app:countDownFormat="Please wait (%ds)"
-        app:countDownInterval="2000"
-        />
+        <EditText
+            android:id="@+id/et_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            />
+
+        <com.white.countdownbutton.CountDownButton
+            android:id="@+id/cd_btn"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:text="获取验证码"
+            app:countDown="60000"
+            app:countDownFormat="%ds后重试"
+            app:countDownInterval="1000"
+            />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_stop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="stop"/>
+        android:text="取消倒计时"/>
 
 </LinearLayout>

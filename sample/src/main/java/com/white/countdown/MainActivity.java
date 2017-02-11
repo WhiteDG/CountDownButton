@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
             if (activity != null) {
                 switch (msg.what) {
                     case SUCCESS_CODE:
-                        Toast.makeText(activity, "get sms code success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "获取验证码成功", Toast.LENGTH_SHORT).show();
                         break;
                     case ERROR_CODE:
-                        Toast.makeText(activity, "get sms code fail", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "获取验证码失败", Toast.LENGTH_SHORT).show();
                         activity.mCountDownButton.removeCountDown();
                         break;
                     default:
@@ -62,13 +64,29 @@ public class MainActivity extends AppCompatActivity {
         mEtPhone = $(R.id.et_phone);
         mBtnStop = $(R.id.btn_stop);
         mCountDownButton = $(R.id.cd_btn);
+        mCountDownButton.setEnabled(!TextUtils.isEmpty(mEtPhone.getText()));
+        mEtPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mCountDownButton.setEnabled(!TextUtils.isEmpty(s.toString()));
+            }
+        });
         mCountDownButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String phoneNum = mEtPhone.getText().toString();
                 if (TextUtils.isEmpty(phoneNum)) {
-                    Toast.makeText(MainActivity.this, "Please input the phone num", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "请输入手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 getSmsCode(phoneNum);
