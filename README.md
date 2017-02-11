@@ -1,6 +1,16 @@
 # CountDownButton
 CountDownButton是一个具有倒计时功能的自定义按钮
 
+![demo](https://github.com/WhiteDG/CountDownButton/blob/master/screenshot/demo.gif)
+
+### 下载
+
+```
+dependencies {
+    compile 'com.white.countdownbutton:countdownbtn:1.0'
+}
+```
+
 ## 使用
 
 ```
