@@ -3,7 +3,7 @@ CountDownButton是一个具有倒计时功能的自定义按钮
 
 ![demo](https://github.com/WhiteDG/CountDownButton/blob/master/screenshot/demo.gif)
 
-### 下载
+## 下载
 
 ```
 dependencies {
