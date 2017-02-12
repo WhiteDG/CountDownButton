@@ -34,11 +34,11 @@ public class CountDownButton extends Button {
      */
     private String mDefaultText;
     /**
-     * 倒计时时长，单位为秒
+     * 倒计时时长，单位为毫秒
      */
     private long mCount;
     /**
-     * 时间间隔
+     * 时间间隔，单位为毫秒
      */
     private long mInterval;
     /**
@@ -59,6 +59,11 @@ public class CountDownButton extends Button {
      */
     private CountDownTimer mCountDownTimer;
 
+    /**
+     * 是否正在执行倒计时
+     */
+    private boolean isCountDownNow;
+
     public CountDownButton(Context context) {
         super(context);
     }
@@ -75,6 +80,7 @@ public class CountDownButton extends Button {
 
 
     private void init(Context context, AttributeSet attrs) {
+        // 获取自定义属性值
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CountDownButton);
         mCountDownFormat = typedArray.getString(R.styleable.CountDownButton_countDownFormat);
         if (typedArray.hasValue(R.styleable.CountDownButton_countDown)) {
@@ -83,6 +89,23 @@ public class CountDownButton extends Button {
         mInterval = (int) typedArray.getFloat(R.styleable.CountDownButton_countDownInterval, DEFAULT_INTERVAL);
         mEnableCountDown = (mCount > mInterval) && typedArray.getBoolean(R.styleable.CountDownButton_enableCountDown, true);
         typedArray.recycle();
+        // 初始化倒计时Timer
+        if (mCountDownTimer == null) {
+            mCountDownTimer = new CountDownTimer(mCount, mInterval) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    setText(String.format(Locale.CHINA, mCountDownFormat, millisUntilFinished / 1000));
+                }
+
+                @Override
+                public void onFinish() {
+                    isCountDownNow = false;
+                    setEnabled(true);
+                    setClickable(true);
+                    setText(mDefaultText);
+                }
+            };
+        }
     }
 
 
@@ -103,25 +126,12 @@ public class CountDownButton extends Button {
                 }
                 if (mEnableCountDown && rect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     mDefaultText = getText().toString();
-                    setText(String.format(Locale.CHINA, mCountDownFormat, mCount));
+                    // 设置按钮不可点击
                     setEnabled(false);
                     setClickable(false);
-                    if (mCountDownTimer == null) {
-                        mCountDownTimer = new CountDownTimer(mCount, mInterval) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                setText(String.format(Locale.CHINA, mCountDownFormat, millisUntilFinished / 1000));
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                setEnabled(true);
-                                setClickable(true);
-                                setText(mDefaultText);
-                            }
-                        };
-                    }
+                    // 开始倒计时
                     mCountDownTimer.start();
+                    isCountDownNow = true;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -147,6 +157,15 @@ public class CountDownButton extends Button {
     }
 
     /**
+     * 是否正在执行倒计时
+     *
+     * @return 倒计时期间返回true否则返回false
+     */
+    public boolean isCountDownNow() {
+        return isCountDownNow;
+    }
+
+    /**
      * 设置倒计时数据
      *
      * @param count           时长
@@ -166,9 +185,10 @@ public class CountDownButton extends Button {
     public void removeCountDown() {
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
-            setText(mDefaultText);
-            setEnabled(true);
-            setClickable(true);
         }
+        isCountDownNow = false;
+        setText(mDefaultText);
+        setEnabled(true);
+        setClickable(true);
     }
 }
