@@ -7,7 +7,7 @@ CountDownButton是一个具有倒计时功能的自定义按钮
 
 ```
 dependencies {
-    compile 'com.white.countdownbutton:countdownbtn:1.0'
+    compile 'com.white.countdownbutton:countdownbtn:1.0.1'
 }
 ```
 
@@ -65,9 +65,10 @@ enableCountDown | 倒计时是否可用，默认为true
 ---|---
 setEnableCountDown(boolean enableCountDown) | 设置倒计时是否可用
 setCountDownFormat(String countDownFormat) | 设置倒计时过程中按钮文本的格式
-setCount(int count) | 设置倒计时总时长，单位为毫秒
+setCount(long count) | 设置倒计时总时长，单位为毫秒
 setInterval(long interval) | 设置倒计时间隔，单位为毫秒
-setCountDown(int count, long interval, String countDownFormat) | 同时设置三个属性
+setCountDown(long count, long interval, String countDownFormat) | 同时设置三个属性
+isCountDownNow() | 是否正在倒计时
 removeCountDown() | 取消倒计时
 
 ## Licence
