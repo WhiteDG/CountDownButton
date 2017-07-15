@@ -7,7 +7,7 @@ CountDownButton是一个具有倒计时功能的自定义按钮
 
 ```
 dependencies {
-    compile 'com.white.countdownbutton:countdownbtn:1.0.1'
+    compile 'com.white.countdownbutton:countdownbtn:1.0.2'
 }
 ```
 
@@ -73,4 +73,4 @@ removeCountDown() | 取消倒计时
 
 ## Licence
 
-[MIT License](https://opensource.org/licenses/MIT) @[Wh1te](https://github.com/WhiteDG)
+[MIT License](https://github.com/WhiteDG/CountDownButton/blob/master/LICENSE.txt) @[Wh1te](https://github.com/WhiteDG)
