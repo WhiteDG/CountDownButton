@@ -101,7 +101,6 @@ public class CountDownButton extends Button {
                 public void onFinish() {
                     isCountDownNow = false;
                     setEnabled(true);
-                    setClickable(true);
                     setText(mDefaultText);
                 }
             };
@@ -128,7 +127,6 @@ public class CountDownButton extends Button {
                     mDefaultText = getText().toString();
                     // 设置按钮不可点击
                     setEnabled(false);
-                    setClickable(false);
                     // 开始倒计时
                     mCountDownTimer.start();
                     isCountDownNow = true;
@@ -189,6 +187,14 @@ public class CountDownButton extends Button {
         isCountDownNow = false;
         setText(mDefaultText);
         setEnabled(true);
-        setClickable(true);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (isCountDownNow()){
+            return;
+        }
+        super.setEnabled(enabled);
+        setClickable(enabled);
     }
 }

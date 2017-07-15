@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mCountDownButton.setEnabled(!TextUtils.isEmpty(s.toString()) && !mCountDownButton.isCountDownNow());
+                mCountDownButton.setEnabled(!TextUtils.isEmpty(s.toString()));// && !mCountDownButton.isCountDownNow()
             }
         });
         mCountDownButton.setOnClickListener(new View.OnClickListener() {
