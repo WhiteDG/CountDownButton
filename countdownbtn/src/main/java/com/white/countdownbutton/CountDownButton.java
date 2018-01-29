@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.CountDownTimer;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -30,9 +31,9 @@ public class CountDownButton extends Button {
      */
     private static final String DEFAULT_COUNT_FORMAT = "%d";
     /**
-     * 默认按钮文字 {@link #getText()}
+     * 倒计时结束后按钮显示的文本
      */
-    private String mDefaultText;
+    private String mCdFinishText;
     /**
      * 倒计时时长，单位为毫秒
      */
@@ -83,6 +84,7 @@ public class CountDownButton extends Button {
         // 获取自定义属性值
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CountDownButton);
         mCountDownFormat = typedArray.getString(R.styleable.CountDownButton_countDownFormat);
+        mCdFinishText = typedArray.getString(R.styleable.CountDownButton_cdFinishText);
         if (typedArray.hasValue(R.styleable.CountDownButton_countDown)) {
             mCount = (int) typedArray.getFloat(R.styleable.CountDownButton_countDown, DEFAULT_COUNT);
         }
@@ -101,7 +103,7 @@ public class CountDownButton extends Button {
                 public void onFinish() {
                     isCountDownNow = false;
                     setEnabled(true);
-                    setText(mDefaultText);
+                    setText(TextUtils.isEmpty(mCdFinishText) ? getText().toString() : mCdFinishText);
                 }
             };
         }
@@ -124,7 +126,6 @@ public class CountDownButton extends Button {
                     onClickListener.onClick(this);
                 }
                 if (mEnableCountDown && rect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                    mDefaultText = getText().toString();
                     // 设置按钮不可点击
                     setEnabled(false);
                     // 开始倒计时
@@ -133,6 +134,8 @@ public class CountDownButton extends Button {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
+                break;
+            default:
                 break;
         }
         return super.onTouchEvent(event);
@@ -177,6 +180,10 @@ public class CountDownButton extends Button {
         setEnableCountDown(true);
     }
 
+    public void setCDFinishText(String cdFinishText) {
+        this.mCdFinishText = cdFinishText;
+    }
+
     /**
      * 移除倒计时
      */
@@ -185,16 +192,22 @@ public class CountDownButton extends Button {
             mCountDownTimer.cancel();
         }
         isCountDownNow = false;
-        setText(mDefaultText);
+        setText(TextUtils.isEmpty(mCdFinishText) ? getText().toString() : mCdFinishText);
         setEnabled(true);
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        if (isCountDownNow()){
+        if (isCountDownNow()) {
             return;
         }
         super.setEnabled(enabled);
         setClickable(enabled);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        removeCountDown();
+        super.onDetachedFromWindow();
     }
 }

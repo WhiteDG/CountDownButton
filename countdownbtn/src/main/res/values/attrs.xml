@@ -5,5 +5,6 @@
         <attr name="countDown" format="float"/>
         <attr name="countDownInterval" format="float"/>
         <attr name="enableCountDown" format="boolean"/>
+        <attr name="cdFinishText" format="string"/>
     </declare-styleable>
 </resources>

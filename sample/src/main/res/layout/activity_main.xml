@@ -29,12 +29,13 @@
 
         <com.white.countdownbutton.CountDownButton
             android:id="@+id/cd_btn"
-            android:layout_width="96dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="获取验证码"
             app:countDown="60000"
             app:countDownFormat="%ds后重试"
             app:countDownInterval="1000"
+            app:cdFinishText="重新获取验证码"
             />
     </LinearLayout>
 
